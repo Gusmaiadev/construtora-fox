@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
+import { AuthProvider } from '@/lib/auth/AuthContext';
+import { AuthGate } from '@/components/dashboard/auth/AuthGate';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -19,7 +21,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="absolute bottom-0 left-1/3 h-[400px] w-[400px] rounded-full bg-cyan-500/5 blur-[120px]" />
         <div className="absolute inset-0 grid-bg opacity-30" />
       </div>
-      <div className="relative">{children}</div>
+      <div className="relative">
+        <AuthProvider>
+          <AuthGate>{children}</AuthGate>
+        </AuthProvider>
+      </div>
     </div>
   );
 }

@@ -21,8 +21,10 @@ import { IconButton } from '@/components/dashboard/ui/IconButton';
 import { Modal } from '@/components/dashboard/ui/Modal';
 import { Input, Field, Select } from '@/components/dashboard/ui/Input';
 import { Empty } from '@/components/dashboard/ui/Empty';
+import { UserMenu } from '@/components/dashboard/layout/UserMenu';
 import { cn } from '@/lib/cn';
 import type { Folder, ProjectSummary } from '@/types/workspace';
+import { useAuth } from '@/lib/auth/AuthContext';
 import {
   seedIfEmpty,
   listFolders,
@@ -52,6 +54,7 @@ type Dialog =
   | null;
 
 export function ProjectsBrowser() {
+  const { admin, isSuper } = useAuth();
   const [folders, setFolders] = useState<Folder[]>([]);
   const [projects, setProjects] = useState<ProjectSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -61,12 +64,16 @@ export function ProjectsBrowser() {
   const [menuId, setMenuId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!admin) return;
     let active = true;
     (async () => {
       try {
         setLoading(true);
-        await seedIfEmpty();
-        const [f, p] = await Promise.all([listFolders(), listProjects()]);
+        if (isSuper) await seedIfEmpty();
+        const [f, p] = await Promise.all([
+          listFolders(),
+          listProjects({ uid: admin.uid, isSuper }),
+        ]);
         if (!active) return;
         setFolders(f);
         setProjects(p);
@@ -79,7 +86,7 @@ export function ProjectsBrowser() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [admin, isSuper]);
 
   const byFolder = useMemo(() => {
     const map = new Map<string, ProjectSummary[]>();
@@ -160,7 +167,9 @@ export function ProjectsBrowser() {
   /* ---- render ---- */
 
   const sections: { id: string | null; name: string; items: ProjectSummary[] }[] = [
-    ...folders.map((f) => ({ id: f.id, name: f.name, items: byFolder.get(f.id) ?? [] })),
+    ...folders
+      .map((f) => ({ id: f.id, name: f.name, items: byFolder.get(f.id) ?? [] }))
+      .filter((s) => isSuper || s.items.length > 0),
   ];
   const orphans = byFolder.get(ORPHAN) ?? [];
   if (orphans.length) sections.push({ id: null, name: 'Sem pasta', items: orphans });
@@ -180,25 +189,34 @@ export function ProjectsBrowser() {
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-white">Projetos</h1>
             <p className="text-sm text-midnight-200">
-              Gestão de obras · {projects.length} {projects.length === 1 ? 'projeto' : 'projetos'} ·{' '}
-              {folders.length} {folders.length === 1 ? 'pasta' : 'pastas'}
+              Gestão de obras · {projects.length} {projects.length === 1 ? 'projeto' : 'projetos'}
+              {isSuper && (
+                <>
+                  {' '}· {folders.length} {folders.length === 1 ? 'pasta' : 'pastas'}
+                </>
+              )}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            leftIcon={<FolderPlus className="h-4 w-4" />}
-            onClick={() => setDialog({ kind: 'new-folder' })}
-          >
-            Nova pasta
-          </Button>
-          <Button
-            leftIcon={<Plus className="h-4 w-4" />}
-            onClick={() => setDialog({ kind: 'new-project' })}
-          >
-            Novo projeto
-          </Button>
+          {isSuper && (
+            <>
+              <Button
+                variant="ghost"
+                leftIcon={<FolderPlus className="h-4 w-4" />}
+                onClick={() => setDialog({ kind: 'new-folder' })}
+              >
+                Nova pasta
+              </Button>
+              <Button
+                leftIcon={<Plus className="h-4 w-4" />}
+                onClick={() => setDialog({ kind: 'new-project' })}
+              >
+                Novo projeto
+              </Button>
+            </>
+          )}
+          <UserMenu />
         </div>
       </header>
 
@@ -216,12 +234,18 @@ export function ProjectsBrowser() {
       ) : sections.length === 0 ? (
         <Empty
           icon={Inbox}
-          title="Nenhum projeto ainda"
-          description="Crie sua primeira pasta e projeto para começar."
+          title={isSuper ? 'Nenhum projeto ainda' : 'Nenhum projeto atribuído'}
+          description={
+            isSuper
+              ? 'Crie sua primeira pasta e projeto para começar.'
+              : 'Você ainda não tem projetos liberados. Peça ao Administrador Principal.'
+          }
           action={
-            <Button leftIcon={<Plus className="h-4 w-4" />} onClick={() => setDialog({ kind: 'new-project' })}>
-              Novo projeto
-            </Button>
+            isSuper ? (
+              <Button leftIcon={<Plus className="h-4 w-4" />} onClick={() => setDialog({ kind: 'new-project' })}>
+                Novo projeto
+              </Button>
+            ) : undefined
           }
         />
       ) : (
@@ -234,7 +258,7 @@ export function ProjectsBrowser() {
                   {sec.name}
                 </h2>
                 <span className="text-xs text-midnight-300">({sec.items.length})</span>
-                {sec.id && (
+                {sec.id && isSuper && (
                   <div className="ml-1 flex items-center gap-0.5">
                     <IconButton
                       icon={<Pencil className="h-3.5 w-3.5" />}
@@ -259,6 +283,7 @@ export function ProjectsBrowser() {
                     <ProjectCard
                       key={p.id}
                       project={p}
+                      canManage={isSuper}
                       menuOpen={menuId === p.id}
                       onToggleMenu={() => setMenuId((id) => (id === p.id ? null : p.id))}
                       onCloseMenu={() => setMenuId(null)}
@@ -382,6 +407,7 @@ export function ProjectsBrowser() {
 
 function ProjectCard({
   project,
+  canManage,
   menuOpen,
   onToggleMenu,
   onCloseMenu,
@@ -391,6 +417,7 @@ function ProjectCard({
   onDelete,
 }: {
   project: ProjectSummary;
+  canManage: boolean;
   menuOpen: boolean;
   onToggleMenu: () => void;
   onCloseMenu: () => void;
@@ -413,6 +440,7 @@ function ProjectCard({
         >
           <LayoutGrid className="h-5 w-5" strokeWidth={1.75} />
         </Link>
+        {canManage && (
         <div className="relative">
           <IconButton
             icon={<MoreVertical className="h-4 w-4" />}
@@ -432,6 +460,7 @@ function ProjectCard({
             </>
           )}
         </div>
+        )}
       </div>
 
       <Link href={`/admin/projeto/${project.id}`} className="block mt-4">

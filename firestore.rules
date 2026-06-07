@@ -1,17 +1,76 @@
 rules_version = '2';
 
-// ⚠️ ATENÇÃO: regras ABERTAS (sem autenticação), conforme definido.
-// Qualquer pessoa com o endereço do site pode LER e ESCREVER os dados.
-// Quando quiser proteger, troque por algo como:
-//   allow read, write: if request.auth != null;
-// e adicione Firebase Auth + uma tela de login no /admin.
+// Regras com autenticação + papéis (Super Admin / Admin) e acesso por projeto.
+// Publique no console: Firestore → Rules → cole isto → Publicar.
+// Lembre de habilitar Authentication → Sign-in method → Email/Senha.
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /folders/{folderId} {
-      allow read, write: if true;
+
+    function isSignedIn() {
+      return request.auth != null;
     }
+    function adminDoc() {
+      return get(/databases/$(database)/documents/admins/$(request.auth.uid)).data;
+    }
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    function isSuper() {
+      return isAdmin() && adminDoc().role == 'super';
+    }
+    function bootstrapDone() {
+      return exists(/databases/$(database)/documents/config/app);
+    }
+    function hasProjectAccess(project) {
+      return isSuper() || (isSignedIn() && request.auth.uid in project.get('allowedAdmins', []));
+    }
+
+    // Flag de inicialização (qual conta é o Super Admin). Leitura liberada para
+    // a tela de login decidir entre "entrar" e "criar conta principal".
+    match /config/app {
+      allow read: if true;
+      allow create: if isSignedIn()
+                    && !bootstrapDone()
+                    && request.resource.data.superAdminUid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // Perfis de administradores.
+    match /admins/{uid} {
+      allow read: if isSignedIn() && (request.auth.uid == uid || isSuper());
+
+      // Bootstrap do Super Admin (1ª conta) OU Super criando um admin comum.
+      allow create: if isSignedIn() && (
+        (request.auth.uid == uid && request.resource.data.role == 'super' && !bootstrapDone())
+        || (isSuper() && request.resource.data.role == 'admin')
+      );
+
+      // Super altera qualquer um; o próprio só muda nome/e-mail (sem mexer em role/projetos).
+      allow update: if isSuper() || (
+        request.auth.uid == uid
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.projectIds == resource.data.projectIds
+      );
+
+      allow delete: if isSuper() && resource.data.role != 'super';
+    }
+
+    // Pastas: qualquer admin lê (para agrupar); só Super gerencia.
+    match /folders/{folderId} {
+      allow read: if isAdmin();
+      allow create, update, delete: if isSuper();
+    }
+
+    // Projetos: Super vê/edita todos; admin comum só os atribuídos.
     match /projects/{projectId} {
-      allow read, write: if true;
+      allow read: if hasProjectAccess(resource.data);
+      allow create: if isSuper();
+      allow delete: if isSuper();
+      // Edita dados do dashboard se tiver acesso; mas só Super muda os admins do projeto.
+      allow update: if isSuper() || (
+        hasProjectAccess(resource.data)
+        && request.resource.data.get('allowedAdmins', []) == resource.data.get('allowedAdmins', [])
+      );
     }
   }
 }

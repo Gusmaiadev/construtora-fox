@@ -31,8 +31,8 @@ export function CategoryDonut({ data }: Props) {
             nameKey="label"
             cx="50%"
             cy="50%"
-            innerRadius={70}
-            outerRadius={100}
+            innerRadius={84}
+            outerRadius={104}
             stroke="rgba(0,0,0,0.4)"
             strokeWidth={2}
             paddingAngle={2}

@@ -1,8 +1,9 @@
 'use client';
 
-import { Search, Menu, RefreshCw, Download, Bell } from 'lucide-react';
+import { Menu, RefreshCw, Download } from 'lucide-react';
 import { Button } from '@/components/dashboard/ui/Button';
 import { IconButton } from '@/components/dashboard/ui/IconButton';
+import { UserMenu } from './UserMenu';
 import { useProject } from '@/lib/store/ProjectContext';
 import { useMemo, useState } from 'react';
 
@@ -65,20 +66,7 @@ export function TopBar({ onToggleSidebar, pageTitle, pageSubtitle }: TopBarProps
           <p className="text-xs text-midnight-200 -mt-0.5">{pageSubtitle ?? today}</p>
         </div>
 
-        <div className="hidden lg:flex items-center gap-2 ml-auto">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-midnight-300" />
-            <input
-              type="text"
-              placeholder="Buscar (em breve)…"
-              disabled
-              className="h-10 w-64 rounded-xl border border-white/[0.06] bg-white/[0.02] pl-9 pr-3 text-sm text-white placeholder:text-midnight-300 outline-none focus:border-fox-500/40"
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 ml-auto lg:ml-2">
-          <IconButton icon={<Bell className="h-4 w-4" />} label="Notificações" />
+        <div className="flex items-center gap-2 ml-auto">
           <Button
             variant="ghost"
             size="sm"
@@ -95,6 +83,9 @@ export function TopBar({ onToggleSidebar, pageTitle, pageSubtitle }: TopBarProps
           >
             {confirmReset ? 'Confirmar?' : 'Resetar'}
           </Button>
+          <div className="ml-1 hidden sm:block">
+            <UserMenu />
+          </div>
         </div>
       </div>
     </header>

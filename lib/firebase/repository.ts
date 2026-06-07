@@ -16,6 +16,8 @@ import {
   updateDoc,
   deleteDoc,
   writeBatch,
+  query,
+  where,
 } from 'firebase/firestore';
 import { db } from './config';
 import { uid } from '@/lib/id';
@@ -77,8 +79,18 @@ export async function deleteFolder(id: string): Promise<void> {
 /* Projects                                                            */
 /* ------------------------------------------------------------------ */
 
-export async function listProjects(): Promise<ProjectSummary[]> {
-  const snap = await getDocs(collection(db, PROJECTS));
+/** Acesso do admin atual. Super vê todos; admin comum só os atribuídos. */
+export interface AccessContext {
+  uid: string;
+  isSuper: boolean;
+}
+
+export async function listProjects(access?: AccessContext): Promise<ProjectSummary[]> {
+  const col = collection(db, PROJECTS);
+  const snap =
+    !access || access.isSuper
+      ? await getDocs(col)
+      : await getDocs(query(col, where('allowedAdmins', 'array-contains', access.uid)));
   return snap.docs
     .map((d) => {
       const data = d.data() as Omit<Project, 'id'>;
