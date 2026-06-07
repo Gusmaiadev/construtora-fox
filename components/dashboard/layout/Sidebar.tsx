@@ -10,39 +10,43 @@ import {
   Sparkles,
   Settings,
   ChevronRight,
+  ArrowLeft,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
 interface NavItem {
-  href: string;
+  suffix: string;
   label: string;
   icon: LucideIcon;
   description: string;
 }
 
 const NAV: NavItem[] = [
-  { href: '/admin', label: 'Visão Geral', icon: LayoutDashboard, description: 'KPIs e gráficos' },
-  { href: '/admin/documentacao', label: 'Documentação', icon: FileText, description: 'Taxas e regularização' },
-  { href: '/admin/materiais', label: 'Materiais', icon: HardHat, description: 'Compras da obra' },
-  { href: '/admin/mao-de-obra', label: 'Mão de Obra', icon: Hammer, description: 'Pagamentos e medições' },
-  { href: '/admin/extras', label: 'Extras', icon: Sparkles, description: 'Adicionais e acabamentos' },
-  { href: '/admin/ajustes', label: 'Ajustes', icon: Settings, description: 'Projeto e dados' },
+  { suffix: '', label: 'Visão Geral', icon: LayoutDashboard, description: 'KPIs e gráficos' },
+  { suffix: 'documentacao', label: 'Documentação', icon: FileText, description: 'Taxas e regularização' },
+  { suffix: 'materiais', label: 'Materiais', icon: HardHat, description: 'Compras da obra' },
+  { suffix: 'mao-de-obra', label: 'Mão de Obra', icon: Hammer, description: 'Pagamentos e medições' },
+  { suffix: 'extras', label: 'Extras', icon: Sparkles, description: 'Adicionais e acabamentos' },
+  { suffix: 'ajustes', label: 'Ajustes', icon: Settings, description: 'Projeto e dados' },
 ];
 
 interface SidebarProps {
   collapsed: boolean;
+  projectId: string;
 }
 
-function isActive(itemHref: string, pathname: string | null): boolean {
-  if (!pathname) return false;
-  if (itemHref === '/admin') return pathname === '/admin';
-  return pathname === itemHref || pathname.startsWith(itemHref + '/');
-}
-
-export function Sidebar({ collapsed }: SidebarProps) {
+export function Sidebar({ collapsed, projectId }: SidebarProps) {
   const pathname = usePathname();
+  const base = `/admin/projeto/${projectId}`;
+
+  const isActive = (suffix: string): boolean => {
+    if (!pathname) return false;
+    const href = suffix ? `${base}/${suffix}` : base;
+    if (!suffix) return pathname === base;
+    return pathname === href || pathname.startsWith(href + '/');
+  };
 
   return (
     <aside
@@ -54,9 +58,9 @@ export function Sidebar({ collapsed }: SidebarProps) {
       <div className="flex h-full flex-col glass-strong border-r border-white/[0.06] rounded-none">
         <div className="flex items-center gap-3 px-4 h-16 border-b border-white/[0.06]">
           <Link
-            href="/"
+            href="/admin"
             className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-fox-500 to-fox-700 shadow-glow-fox flex-none"
-            aria-label="Ir para o site Construtora Fox"
+            aria-label="Voltar aos projetos"
           >
             <span className="font-display font-bold text-white text-base">F</span>
           </Link>
@@ -70,14 +74,25 @@ export function Sidebar({ collapsed }: SidebarProps) {
           )}
         </div>
 
-        <nav className="flex-1 px-2 py-4 overflow-y-auto no-scrollbar">
+        <div className="px-2 pt-3">
+          <Link
+            href="/admin"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-midnight-100 hover:bg-white/[0.04] hover:text-white transition"
+          >
+            <ArrowLeft className="h-4 w-4 flex-none" />
+            {!collapsed && <span>Todos os projetos</span>}
+          </Link>
+        </div>
+
+        <nav className="flex-1 px-2 py-3 overflow-y-auto no-scrollbar">
           <div className="space-y-1">
             {NAV.map((item) => {
-              const active = isActive(item.href, pathname);
+              const active = isActive(item.suffix);
+              const href = item.suffix ? `${base}/${item.suffix}` : base;
               return (
                 <Link
-                  key={item.href}
-                  href={item.href}
+                  key={item.suffix || 'home'}
+                  href={href}
                   className={cn(
                     'group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fox-500/40',
@@ -119,7 +134,7 @@ export function Sidebar({ collapsed }: SidebarProps) {
             {!collapsed && (
               <div className="text-[11px] text-midnight-200 leading-tight">
                 <div className="text-emerald-300 font-medium">Sistema online</div>
-                <div>Dados locais</div>
+                <div>Sincronizado · Firestore</div>
               </div>
             )}
           </div>

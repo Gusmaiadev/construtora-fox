@@ -90,14 +90,14 @@ export function LaborPage() {
 
       <Card>
         <CardHeader title="Mão de obra principal" subtitle="Pagamentos do empreiteiro principal" />
-        <CardBody className="pt-0 px-0">
+        <CardBody className="pt-4 px-0">
           <DataGrid sheet="labor" />
         </CardBody>
       </Card>
 
       <Card>
         <CardHeader title="Mão de obra extra" subtitle="Subempreitas e adicionais" />
-        <CardBody className="pt-0 px-0">
+        <CardBody className="pt-4 px-0">
           <DataGrid sheet="extraLabor" />
         </CardBody>
       </Card>

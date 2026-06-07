@@ -44,7 +44,10 @@ export function totalBudgetPlanned(s: ProjectState): number {
   return s.budgetBreakdown.reduce((acc, b) => acc + (b.value || 0), 0);
 }
 
-const TERRAIN_VALUE = 10_000;
+/** Valor do terreno = orçado na categoria "Terreno" (0 se não houver). */
+export function terrainValue(s: ProjectState): number {
+  return budgetForCategory(s, 'Terreno') ?? 0;
+}
 
 export function totalSpent(s: ProjectState): number {
   return (
@@ -52,7 +55,7 @@ export function totalSpent(s: ProjectState): number {
     totalMaterials(s) +
     totalLabor(s) +
     totalExtraLabor(s) +
-    TERRAIN_VALUE
+    terrainValue(s)
   );
 }
 
@@ -91,7 +94,7 @@ export function aggregateByCategory(s: ProjectState): CategoryAggregate[] {
       total: totalClientExtras(s),
       count: s.clientExtras.rows.length,
     },
-    { category: 'terrain', ...map.terrain, total: TERRAIN_VALUE, count: 1 },
+    { category: 'terrain', ...map.terrain, total: terrainValue(s), count: terrainValue(s) > 0 ? 1 : 0 },
   ];
 }
 

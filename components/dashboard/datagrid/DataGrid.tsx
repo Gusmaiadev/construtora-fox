@@ -168,7 +168,7 @@ export function DataGrid({
         </div>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-auto max-h-[70vh]">
         {filteredRows.length === 0 ? (
           <Empty
             icon={Inbox}
@@ -190,7 +190,7 @@ export function DataGrid({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/[0.06] bg-white/[0.015]">
-                <th className="w-10 text-center text-[11px] font-medium uppercase tracking-wider text-midnight-300 py-3">
+                <th className="sticky top-0 z-20 bg-midnight-900 border-b border-white/10 w-10 text-center text-[11px] font-medium uppercase tracking-wider text-midnight-300 py-3">
                   #
                 </th>
                 {columns.map((col) => (
@@ -204,7 +204,7 @@ export function DataGrid({
                   />
                 ))}
                 {allowDelete && (
-                  <th className="w-12 text-right pr-3 text-[11px] font-medium uppercase tracking-wider text-midnight-300 py-3" />
+                  <th className="sticky top-0 z-20 bg-midnight-900 border-b border-white/10 w-12 text-right pr-3 text-[11px] font-medium uppercase tracking-wider text-midnight-300 py-3" />
                 )}
               </tr>
             </thead>
@@ -254,11 +254,11 @@ export function DataGrid({
               </AnimatePresence>
             </tbody>
             <tfoot>
-              <tr className="border-t border-white/[0.06] bg-white/[0.02]">
-                <td colSpan={columns.length} className="py-3 px-3 text-xs text-midnight-200 font-medium uppercase tracking-wider text-right">
+              <tr>
+                <td colSpan={columns.length} className="sticky bottom-0 z-20 bg-midnight-900 border-t border-white/10 py-3 px-3 text-xs text-midnight-200 font-medium uppercase tracking-wider text-right">
                   Total
                 </td>
-                <td colSpan={allowDelete ? 2 : 1} className="py-3 pr-5 text-right">
+                <td colSpan={allowDelete ? 2 : 1} className="sticky bottom-0 z-20 bg-midnight-900 border-t border-white/10 py-3 pr-5 text-right">
                   <span className="font-mono tabular-nums text-fox-300 font-semibold">
                     {formatCurrency(total)}
                   </span>
@@ -296,6 +296,7 @@ function ColumnHeader({
   return (
     <th
       className={cn(
+        'sticky top-0 z-20 bg-midnight-900 border-b border-white/10',
         'group text-left text-[11px] font-medium uppercase tracking-wider text-midnight-200 py-3 px-3',
         (col.type === 'currency' || col.type === 'number') && 'text-right',
       )}

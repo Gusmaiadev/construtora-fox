@@ -1,7 +1,7 @@
-import { DashboardPage } from '@/components/dashboard/pages/DashboardPage';
+import { ProjectsBrowser } from '@/components/dashboard/workspace/ProjectsBrowser';
 
-export const metadata = { title: 'Visão Geral' };
+export const metadata = { title: 'Projetos' };
 
 export default function AdminHomePage() {
-  return <DashboardPage />;
+  return <ProjectsBrowser />;
 }

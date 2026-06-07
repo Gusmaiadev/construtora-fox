@@ -28,7 +28,7 @@ export function ProgressBar({
   variant = 'fox',
   size = 'md',
 }: ProgressBarProps) {
-  const pct = Math.min(100, Math.max(0, (value / max) * 100));
+  const pct = max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0;
   return (
     <div className="w-full">
       <div className={cn('w-full bg-white/[0.04] rounded-full overflow-hidden ring-1 ring-white/[0.04]', heightMap[size])}>
