@@ -25,10 +25,10 @@ export default function ProjetosPage() {
             <Reveal as="article" className="proj-card">
               <div className="proj-card-img">
                 <Image
-                  src="/site/images/recanto-feature.jpg"
+                  src="/site/images/mandacaru-5.png"
                   alt="Recanto de Mandacaru"
-                  width={900}
-                  height={720}
+                  width={1254}
+                  height={1254}
                   sizes="(max-width: 1024px) 100vw, 55vw"
                 />
                 <div className="proj-card-status">Lançamento 2026</div>
