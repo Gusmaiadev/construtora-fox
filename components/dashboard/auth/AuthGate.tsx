@@ -13,6 +13,7 @@ import {
 import { auth } from '@/lib/firebase/config';
 import { Button } from '@/components/dashboard/ui/Button';
 import { Input, Field } from '@/components/dashboard/ui/Input';
+import { BrandLogo } from '@/components/dashboard/ui/BrandLogo';
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const { user, admin, loading } = useAuth();
@@ -57,9 +58,7 @@ function AuthShell({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="mb-6 flex flex-col items-center text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-fox-500 to-fox-700 shadow-glow-fox">
-            <span className="font-display font-bold text-white text-2xl">F</span>
-          </div>
+          <BrandLogo size={64} />
           <h1 className="mt-4 text-xl font-semibold text-white">Construtora Fox</h1>
           <p className="text-sm text-midnight-200">Painel de gestão de obras</p>
         </div>

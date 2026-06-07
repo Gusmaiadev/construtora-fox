@@ -22,6 +22,7 @@ import { Modal } from '@/components/dashboard/ui/Modal';
 import { Input, Field, Select } from '@/components/dashboard/ui/Input';
 import { Empty } from '@/components/dashboard/ui/Empty';
 import { UserMenu } from '@/components/dashboard/layout/UserMenu';
+import { BrandLogo } from '@/components/dashboard/ui/BrandLogo';
 import { cn } from '@/lib/cn';
 import type { Folder, ProjectSummary } from '@/types/workspace';
 import { useAuth } from '@/lib/auth/AuthContext';
@@ -177,47 +178,46 @@ export function ProjectsBrowser() {
   return (
     <div className="mx-auto w-full max-w-[1500px] px-6 py-8">
       {/* header */}
-      <header className="flex flex-wrap items-end justify-between gap-4 mb-8">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-fox-500 to-fox-700 shadow-glow-fox"
-            aria-label="Ir para o site"
-          >
-            <span className="font-display font-bold text-white text-lg">F</span>
-          </Link>
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-white">Projetos</h1>
-            <p className="text-sm text-midnight-200">
-              Gestão de obras · {projects.length} {projects.length === 1 ? 'projeto' : 'projetos'}
-              {isSuper && (
-                <>
-                  {' '}· {folders.length} {folders.length === 1 ? 'pasta' : 'pastas'}
-                </>
-              )}
-            </p>
+      <header className="mb-8">
+        {/* Linha 1: logo + título + perfil */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <Link href="/" className="flex-none" aria-label="Ir para o site">
+              <BrandLogo size={44} />
+            </Link>
+            <div className="min-w-0">
+              <h1 className="text-2xl font-semibold tracking-tight text-white truncate">Projetos</h1>
+              <p className="text-sm text-midnight-200 truncate">
+                Gestão de obras · {projects.length} {projects.length === 1 ? 'projeto' : 'projetos'}
+                {isSuper && (
+                  <>
+                    {' '}· {folders.length} {folders.length === 1 ? 'pasta' : 'pastas'}
+                  </>
+                )}
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="flex items-center gap-2">
-          {isSuper && (
-            <>
-              <Button
-                variant="ghost"
-                leftIcon={<FolderPlus className="h-4 w-4" />}
-                onClick={() => setDialog({ kind: 'new-folder' })}
-              >
-                Nova pasta
-              </Button>
-              <Button
-                leftIcon={<Plus className="h-4 w-4" />}
-                onClick={() => setDialog({ kind: 'new-project' })}
-              >
-                Novo projeto
-              </Button>
-            </>
-          )}
           <UserMenu />
         </div>
+
+        {/* Linha 2: ações (só Super Admin) */}
+        {isSuper && (
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <Button
+              variant="ghost"
+              leftIcon={<FolderPlus className="h-4 w-4" />}
+              onClick={() => setDialog({ kind: 'new-folder' })}
+            >
+              Nova pasta
+            </Button>
+            <Button
+              leftIcon={<Plus className="h-4 w-4" />}
+              onClick={() => setDialog({ kind: 'new-project' })}
+            >
+              Novo projeto
+            </Button>
+          </div>
+        )}
       </header>
 
       {error && (

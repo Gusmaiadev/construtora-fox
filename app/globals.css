@@ -555,7 +555,7 @@ h2.section-title em { font-style: italic; color: var(--gold); font-weight: 400; 
 body.admin-body {
   color-scheme: dark;
   background: radial-gradient(ellipse at top, #13172E 0%, #05070F 60%);
-  background-attachment: fixed;
+  background-repeat: no-repeat;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   color: #E8E9F1;
   font-family: var(--sans);
@@ -634,4 +634,52 @@ body.admin-body *:focus-visible { outline: 2px solid rgba(249,115,22,0.6); outli
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { scrollbar-width: none; }
   .text-balance { text-wrap: balance; }
+}
+
+/* ════════════════════════════════════════════════
+   PERFORMANCE — rolagem fluida (mobile + reduzir movimento)
+   ════════════════════════════════════════════════ */
+
+/* No mobile, backdrop-filter pesado (blur) trava o scroll porque é
+   re-renderizado a cada quadro. Reduz/remove onde mais pesa. */
+@media (max-width: 1024px) {
+  .nav.scrolled {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(248, 250, 252, 0.97);
+  }
+  .serv-hero-stats,
+  .recanto-meta-bar {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .serv-grandes-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(15, 23, 42, 0.82);
+  }
+  /* O que mais trava o scroll do admin: backdrop-blur em muitos cards.
+     No mobile, removemos o blur e usamos fundo sólido (visual quase igual). */
+  .glass {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(18, 22, 42, 0.72);
+  }
+  .glass-strong {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(22, 26, 48, 0.86);
+  }
+}
+
+/* Quem prefere menos movimento: desliga animações contínuas e parallax. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

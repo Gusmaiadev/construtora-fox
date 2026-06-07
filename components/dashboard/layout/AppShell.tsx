@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
@@ -20,8 +20,13 @@ const SEG_META: Record<string, { title: string; subtitle: string }> = {
 };
 
 export function AppShell({ children, projectId }: AppShellProps) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [open, setOpen] = useState(false); // menu mobile (overlay)
   const pathname = usePathname();
+
+  // Fecha o menu mobile ao trocar de página.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   const base = `/admin/projeto/${projectId}`;
   const seg = (pathname ?? base).replace(base, '').replace(/^\//, '').split('/')[0] ?? '';
@@ -29,11 +34,20 @@ export function AppShell({ children, projectId }: AppShellProps) {
 
   return (
     <div className="min-h-screen flex text-midnight-50">
-      <Sidebar collapsed={collapsed} projectId={projectId} />
+      {/* Fundo escuro só no mobile quando o menu está aberto (fecha ao tocar) */}
+      {open && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+          onClick={() => setOpen(false)}
+          aria-hidden
+        />
+      )}
+
+      <Sidebar open={open} projectId={projectId} />
 
       <div className="relative flex-1 flex flex-col min-w-0">
         <TopBar
-          onToggleSidebar={() => setCollapsed((c) => !c)}
+          onToggleSidebar={() => setOpen((o) => !o)}
           pageTitle={meta.title}
           pageSubtitle={meta.subtitle}
         />

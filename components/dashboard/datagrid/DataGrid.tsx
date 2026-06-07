@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus,
   Trash2,
@@ -209,49 +208,42 @@ export function DataGrid({
               </tr>
             </thead>
             <tbody>
-              <AnimatePresence initial={false}>
-                {filteredRows.map((row, idx) => (
-                  <motion.tr
-                    key={row.id}
-                    layout
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.18 }}
-                    className="border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors"
-                  >
-                    <td className="w-10 text-center text-xs text-midnight-300 font-mono tabular-nums py-2">
-                      {idx + 1}
-                    </td>
-                    {columns.map((col) => (
-                      <td
-                        key={col.id}
-                        className="py-1 align-middle"
-                        style={{ minWidth: col.width ?? 160 }}
-                      >
-                        <div className="h-9 flex items-center">
-                          <EditableCell
-                            column={col}
-                            value={row.values[col.key] ?? null}
-                            rowIndex={idx}
-                            onChange={(v) => updateCell(row.id, col.key, v)}
-                          />
-                        </div>
-                      </td>
-                    ))}
-                    {allowDelete && (
-                      <td className="w-12 text-right pr-3">
-                        <IconButton
-                          icon={<Trash2 className="h-4 w-4" />}
-                          label="Remover linha"
-                          tone={confirmDeleteId === row.id ? 'danger' : 'default'}
-                          onClick={() => handleDeleteRow(row.id)}
+              {filteredRows.map((row, idx) => (
+                <tr
+                  key={row.id}
+                  className="border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors"
+                >
+                  <td className="w-10 text-center text-xs text-midnight-300 font-mono tabular-nums py-2">
+                    {idx + 1}
+                  </td>
+                  {columns.map((col) => (
+                    <td
+                      key={col.id}
+                      className="py-1 align-middle"
+                      style={{ minWidth: col.width ?? 160 }}
+                    >
+                      <div className="h-9 flex items-center">
+                        <EditableCell
+                          column={col}
+                          value={row.values[col.key] ?? null}
+                          rowIndex={idx}
+                          onChange={(v) => updateCell(row.id, col.key, v)}
                         />
-                      </td>
-                    )}
-                  </motion.tr>
-                ))}
-              </AnimatePresence>
+                      </div>
+                    </td>
+                  ))}
+                  {allowDelete && (
+                    <td className="w-12 text-right pr-3">
+                      <IconButton
+                        icon={<Trash2 className="h-4 w-4" />}
+                        label="Remover linha"
+                        tone={confirmDeleteId === row.id ? 'danger' : 'default'}
+                        onClick={() => handleDeleteRow(row.id)}
+                      />
+                    </td>
+                  )}
+                </tr>
+              ))}
             </tbody>
             <tfoot>
               <tr>

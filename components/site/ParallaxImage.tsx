@@ -17,12 +17,19 @@ export function ParallaxImage({ src, alt, factor = 0.35, priority }: ParallaxIma
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // Parallax só no desktop e quando o usuário não pediu "reduzir movimento".
+    // No mobile o efeito trava a rolagem — então a imagem fica estática (cobre via height 120%).
+    const allowParallax =
+      window.matchMedia('(min-width: 768px)').matches &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!allowParallax) return;
+
     let raf = 0;
     const onScroll = () => {
       if (raf) return;
       raf = requestAnimationFrame(() => {
         const y = window.scrollY * factor;
-        el.style.transform = `translateY(${y}px)`;
+        el.style.transform = `translate3d(0, ${y}px, 0)`;
         raf = 0;
       });
     };

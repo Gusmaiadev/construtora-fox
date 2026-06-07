@@ -55,8 +55,9 @@ export function TopBar({ onToggleSidebar, pageTitle, pageSubtitle }: TopBarProps
       <div className="flex items-center gap-4 px-6 h-16">
         <IconButton
           icon={<Menu className="h-5 w-5" />}
-          label="Alternar menu"
+          label="Abrir menu"
           onClick={onToggleSidebar}
+          className="lg:hidden"
         />
 
         <div className="hidden md:block">
