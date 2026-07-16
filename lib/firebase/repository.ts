@@ -31,7 +31,13 @@ import type {
   Row,
 } from '@/types/domain';
 import type { DuplicateOptions, Folder, Project, ProjectSummary } from '@/types/workspace';
-import { buildEmptyState, buildStateFromImport, type ImportedProject } from '@/lib/store/buildState';
+import {
+  buildEmptyState,
+  buildStateFromImport,
+  emptyProfitSheet,
+  normalizeState,
+  type ImportedProject,
+} from '@/lib/store/buildState';
 import importedRaw from '@/lib/data/imported-projects.json';
 
 const FOLDERS = 'folders';
@@ -115,7 +121,7 @@ export async function getProject(id: string): Promise<Project | null> {
     folderId: data.folderId ?? null,
     createdAt: data.createdAt,
     updatedAt: data.updatedAt,
-    state: data.state,
+    state: normalizeState(data.state),
   };
 }
 
@@ -254,6 +260,7 @@ function cloneState(s: ProjectState, withData: boolean): ProjectState {
     labor: cloneSheet(s.labor, withData),
     extraLabor: cloneSheet(s.extraLabor, withData),
     clientExtras: cloneSheet(s.clientExtras, withData),
+    profit: cloneSheet(s.profit ?? emptyProfitSheet(), withData),
     measurements: withData
       ? s.measurements.map((m) => ({ ...m, id: uid() }) as Measurement)
       : [],

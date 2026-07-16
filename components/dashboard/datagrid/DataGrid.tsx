@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import {
   Plus,
   Trash2,
@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { useProject } from '@/lib/store/ProjectContext';
 import type { SheetKey } from '@/lib/store/actions';
-import type { CellValue, ColumnDef } from '@/types/domain';
+import type { CellValue, ColumnDef, Row } from '@/types/domain';
 import { Button } from '@/components/dashboard/ui/Button';
 import { IconButton } from '@/components/dashboard/ui/IconButton';
 import { EditableCell } from './EditableCell';
@@ -47,6 +47,9 @@ export function DataGrid({
   const [sortDir, setSortDir] = useState<SortDir>(null);
   const [showAddColumn, setShowAddColumn] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  // Ref espelha o confirmDeleteId para manter `requestDelete` estável (sem
+  // recriar a cada render), permitindo memoizar as linhas.
+  const confirmRef = useRef<string | null>(null);
 
   const columns = data.columns;
 
@@ -94,15 +97,27 @@ export function DataGrid({
     dispatch({ type: 'SHEET_ADD_ROW', sheet });
   };
 
-  const handleDeleteRow = (rowId: string) => {
-    if (confirmDeleteId === rowId) {
-      dispatch({ type: 'SHEET_DELETE_ROW', sheet, rowId });
-      setConfirmDeleteId(null);
-    } else {
-      setConfirmDeleteId(rowId);
-      setTimeout(() => setConfirmDeleteId((id) => (id === rowId ? null : id)), 3000);
-    }
-  };
+  // Estável entre renders (só depende de dispatch/sheet) — usa a ref para ler
+  // o estado de confirmação sem virar dependência.
+  const requestDelete = useCallback(
+    (rowId: string) => {
+      if (confirmRef.current === rowId) {
+        confirmRef.current = null;
+        setConfirmDeleteId(null);
+        dispatch({ type: 'SHEET_DELETE_ROW', sheet, rowId });
+      } else {
+        confirmRef.current = rowId;
+        setConfirmDeleteId(rowId);
+        setTimeout(() => {
+          if (confirmRef.current === rowId) {
+            confirmRef.current = null;
+            setConfirmDeleteId(null);
+          }
+        }, 3000);
+      }
+    },
+    [dispatch, sheet],
+  );
 
   const handleAddColumn = (col: ColumnDef) => {
     dispatch({ type: 'SHEET_ADD_COLUMN', sheet, column: col });
@@ -115,9 +130,13 @@ export function DataGrid({
     }
   };
 
-  const updateCell = (rowId: string, key: string, val: CellValue) => {
-    dispatch({ type: 'SHEET_UPDATE_ROW', sheet, rowId, values: { [key]: val } });
-  };
+  // Estável — assim as linhas memoizadas não re-renderizam à toa.
+  const updateCell = useCallback(
+    (rowId: string, key: string, val: CellValue) => {
+      dispatch({ type: 'SHEET_UPDATE_ROW', sheet, rowId, values: { [key]: val } });
+    },
+    [dispatch, sheet],
+  );
 
   return (
     <div className="glass rounded-2xl overflow-hidden">
@@ -209,40 +228,16 @@ export function DataGrid({
             </thead>
             <tbody>
               {filteredRows.map((row, idx) => (
-                <tr
+                <DataRow
                   key={row.id}
-                  className="border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors"
-                >
-                  <td className="w-10 text-center text-xs text-midnight-300 font-mono tabular-nums py-2">
-                    {idx + 1}
-                  </td>
-                  {columns.map((col) => (
-                    <td
-                      key={col.id}
-                      className="py-1 align-middle"
-                      style={{ minWidth: col.width ?? 160 }}
-                    >
-                      <div className="h-9 flex items-center">
-                        <EditableCell
-                          column={col}
-                          value={row.values[col.key] ?? null}
-                          rowIndex={idx}
-                          onChange={(v) => updateCell(row.id, col.key, v)}
-                        />
-                      </div>
-                    </td>
-                  ))}
-                  {allowDelete && (
-                    <td className="w-12 text-right pr-3">
-                      <IconButton
-                        icon={<Trash2 className="h-4 w-4" />}
-                        label="Remover linha"
-                        tone={confirmDeleteId === row.id ? 'danger' : 'default'}
-                        onClick={() => handleDeleteRow(row.id)}
-                      />
-                    </td>
-                  )}
-                </tr>
+                  row={row}
+                  columns={columns}
+                  index={idx}
+                  allowDelete={allowDelete}
+                  confirming={confirmDeleteId === row.id}
+                  onCellChange={updateCell}
+                  onRequestDelete={requestDelete}
+                />
               ))}
             </tbody>
             <tfoot>
@@ -270,6 +265,63 @@ export function DataGrid({
     </div>
   );
 }
+
+/* ------------------------------------------------------------------ */
+/* Linha memoizada — só re-renderiza quando A PRÓPRIA linha muda        */
+/* (ref da row, índice, estado de confirmação de exclusão ou colunas).  */
+/* Salvar uma célula muda apenas a ref daquela linha no reducer, então  */
+/* as demais linhas não re-renderizam.                                  */
+/* ------------------------------------------------------------------ */
+
+interface DataRowProps {
+  row: Row;
+  columns: ColumnDef[];
+  index: number;
+  allowDelete: boolean;
+  confirming: boolean;
+  onCellChange: (rowId: string, key: string, val: CellValue) => void;
+  onRequestDelete: (rowId: string) => void;
+}
+
+const DataRow = memo(function DataRow({
+  row,
+  columns,
+  index,
+  allowDelete,
+  confirming,
+  onCellChange,
+  onRequestDelete,
+}: DataRowProps) {
+  return (
+    <tr className="border-b border-white/[0.03] hover:bg-white/[0.015] transition-colors">
+      <td className="w-10 text-center text-xs text-midnight-300 font-mono tabular-nums py-2">
+        {index + 1}
+      </td>
+      {columns.map((col) => (
+        <td key={col.id} className="py-1 align-middle" style={{ minWidth: col.width ?? 160 }}>
+          <div className="h-9 flex items-center">
+            <EditableCell
+              column={col}
+              value={row.values[col.key] ?? null}
+              rowIndex={index}
+              onChange={(v) => onCellChange(row.id, col.key, v)}
+            />
+          </div>
+        </td>
+      ))}
+      {allowDelete && (
+        <td className="w-12 text-right pr-3">
+          <IconButton
+            icon={<Trash2 className="h-4 w-4" />}
+            label="Remover linha"
+            tone={confirming ? 'danger' : 'default'}
+            onClick={() => onRequestDelete(row.id)}
+          />
+        </td>
+      )}
+    </tr>
+  );
+});
 
 function ColumnHeader({
   col,

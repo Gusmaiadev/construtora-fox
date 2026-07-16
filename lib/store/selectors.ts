@@ -37,6 +37,9 @@ export function totalExtraLabor(s: ProjectState): number {
 export function totalClientExtras(s: ProjectState): number {
   return sumValueColumn(s.clientExtras);
 }
+export function totalProfit(s: ProjectState): number {
+  return sumValueColumn(s.profit);
+}
 export function totalMeasurements(s: ProjectState): number {
   return s.measurements.reduce((acc, m) => acc + (m.value || 0), 0);
 }

@@ -14,8 +14,10 @@ const SEG_META: Record<string, { title: string; subtitle: string }> = {
   '': { title: 'Visão Geral', subtitle: 'Indicadores do projeto em tempo real' },
   documentacao: { title: 'Documentação', subtitle: 'Taxas, regularização e custos iniciais' },
   materiais: { title: 'Materiais', subtitle: 'Compras, estoques e acabamentos' },
-  'mao-de-obra': { title: 'Mão de Obra', subtitle: 'Pagamentos e medições da obra' },
+  'mao-de-obra': { title: 'Mão de Obra', subtitle: 'Pagamentos e contratações da obra' },
+  medicoes: { title: 'Medições da Obra', subtitle: 'Liberações financeiras por etapa do contrato' },
   extras: { title: 'Extras & Acabamentos', subtitle: 'Adicionais cobrados e cerâmicas' },
+  lucro: { title: 'Lucro', subtitle: 'Receitas e resultado do projeto' },
   ajustes: { title: 'Ajustes', subtitle: 'Configurações do projeto e dados' },
 };
 

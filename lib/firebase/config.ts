@@ -5,7 +5,13 @@
  * proteção dos dados vem do Firebase Auth (login) + das REGRAS do Firestore.
  */
 import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
-import { getFirestore, initializeFirestore, type Firestore } from 'firebase/firestore';
+import {
+  getFirestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+  type Firestore,
+} from 'firebase/firestore';
 import { getAuth, type Auth } from 'firebase/auth';
 
 // Lê do .env.local (NEXT_PUBLIC_*) com fallback para os valores do projeto —
@@ -23,9 +29,22 @@ const app: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseCon
 
 // `ignoreUndefinedProperties` evita erros ao gravar objetos com campos
 // opcionais ausentes. initializeFirestore só roda uma vez (HMR -> getFirestore).
+//
+// No navegador ligamos o CACHE LOCAL PERSISTENTE (IndexedDB): as leituras
+// passam a ser servidas instantaneamente do cache e revalidadas em segundo
+// plano — loads e reaberturas de projeto ficam muito mais rápidos. No
+// servidor (SSR/build) não há IndexedDB, então usamos o Firestore padrão.
 let db: Firestore;
 try {
-  db = initializeFirestore(app, { ignoreUndefinedProperties: true });
+  db =
+    typeof window === 'undefined'
+      ? initializeFirestore(app, { ignoreUndefinedProperties: true })
+      : initializeFirestore(app, {
+          ignoreUndefinedProperties: true,
+          localCache: persistentLocalCache({
+            tabManager: persistentMultipleTabManager(),
+          }),
+        });
 } catch {
   db = getFirestore(app);
 }

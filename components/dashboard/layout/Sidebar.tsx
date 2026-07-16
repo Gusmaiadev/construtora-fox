@@ -7,7 +7,9 @@ import {
   FileText,
   HardHat,
   Hammer,
+  Ruler,
   Sparkles,
+  Coins,
   Settings,
   ChevronRight,
   ArrowLeft,
@@ -27,8 +29,10 @@ const NAV: NavItem[] = [
   { suffix: '', label: 'Visão Geral', icon: LayoutDashboard, description: 'KPIs e gráficos' },
   { suffix: 'documentacao', label: 'Documentação', icon: FileText, description: 'Taxas e regularização' },
   { suffix: 'materiais', label: 'Materiais', icon: HardHat, description: 'Compras da obra' },
-  { suffix: 'mao-de-obra', label: 'Mão de Obra', icon: Hammer, description: 'Pagamentos e medições' },
+  { suffix: 'mao-de-obra', label: 'Mão de Obra', icon: Hammer, description: 'Pagamentos e contratações' },
+  { suffix: 'medicoes', label: 'Medições', icon: Ruler, description: 'Liberações por etapa' },
   { suffix: 'extras', label: 'Extras', icon: Sparkles, description: 'Adicionais e acabamentos' },
+  { suffix: 'lucro', label: 'Lucro', icon: Coins, description: 'Receitas e resultado' },
   { suffix: 'ajustes', label: 'Ajustes', icon: Settings, description: 'Projeto e dados' },
 ];
 

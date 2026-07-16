@@ -19,7 +19,8 @@ export type SheetKey =
   | 'materials'
   | 'labor'
   | 'extraLabor'
-  | 'clientExtras';
+  | 'clientExtras'
+  | 'profit';
 
 export type Action =
   | { type: 'HYDRATE'; state: ProjectState }

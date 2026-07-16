@@ -24,18 +24,40 @@ import {
   totalLabor,
   totalMaterials,
   totalMeasurements,
-  ceramicTotalArea,
+  totalProfit,
 } from '@/lib/store/selectors';
 import { KpiCard } from '@/components/dashboard/ui/KpiCard';
 import { Card, CardBody, CardHeader } from '@/components/dashboard/ui/Card';
-import { ExpenseAreaChart } from '@/components/dashboard/charts/ExpenseAreaChart';
-import { CategoryDonut } from '@/components/dashboard/charts/CategoryDonut';
-import { TopMaterialsChart } from '@/components/dashboard/charts/TopMaterialsChart';
-import { BudgetVsActualChart } from '@/components/dashboard/charts/BudgetVsActualChart';
-import { CumulativeChart } from '@/components/dashboard/charts/CumulativeChart';
+import dynamic from 'next/dynamic';
 import { ProgressBar } from '@/components/dashboard/ui/ProgressBar';
 import { Badge } from '@/components/dashboard/ui/Badge';
 import { formatCurrency, formatPercent } from '@/lib/format';
+
+// Gráficos (recharts) carregados sob demanda: ficam fora do JS inicial e só
+// são baixados/montados quando o dashboard aparece.
+const ChartFallback = () => (
+  <div className="h-[260px] w-full animate-pulse rounded-xl bg-white/[0.03]" />
+);
+const ExpenseAreaChart = dynamic(
+  () => import('@/components/dashboard/charts/ExpenseAreaChart').then((m) => m.ExpenseAreaChart),
+  { ssr: false, loading: () => <ChartFallback /> },
+);
+const CategoryDonut = dynamic(
+  () => import('@/components/dashboard/charts/CategoryDonut').then((m) => m.CategoryDonut),
+  { ssr: false, loading: () => <ChartFallback /> },
+);
+const TopMaterialsChart = dynamic(
+  () => import('@/components/dashboard/charts/TopMaterialsChart').then((m) => m.TopMaterialsChart),
+  { ssr: false, loading: () => <ChartFallback /> },
+);
+const BudgetVsActualChart = dynamic(
+  () => import('@/components/dashboard/charts/BudgetVsActualChart').then((m) => m.BudgetVsActualChart),
+  { ssr: false, loading: () => <ChartFallback /> },
+);
+const CumulativeChart = dynamic(
+  () => import('@/components/dashboard/charts/CumulativeChart').then((m) => m.CumulativeChart),
+  { ssr: false, loading: () => <ChartFallback /> },
+);
 
 export function DashboardPage() {
   const { state } = useProject();
@@ -45,7 +67,7 @@ export function DashboardPage() {
   const topMats = useMemo(() => topMaterials(state, 8), [state]);
   const measurementsTotal = totalMeasurements(state);
   const budgetPlanned = totalBudgetPlanned(state);
-  const ceramicArea = ceramicTotalArea(state);
+  const profit = totalProfit(state);
 
   const burnRate = monthly.length > 0 ? monthly[monthly.length - 1]!.total : 0;
 
@@ -125,11 +147,11 @@ export function DashboardPage() {
           delay={0.1}
         />
         <KpiCard
-          label="Cerâmica · área"
-          value={`${ceramicArea.toLocaleString('pt-BR')} m²`}
-          icon={Layers}
-          accent="cyan"
-          hint={`${state.ceramics.length} ambientes`}
+          label="Lucro"
+          value={formatCurrency(profit)}
+          icon={TrendingUp}
+          accent={profit >= 0 ? 'emerald' : 'rose'}
+          hint={`${state.profit.rows.length} lançamentos`}
           delay={0.15}
         />
       </div>

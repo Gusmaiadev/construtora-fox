@@ -60,6 +60,23 @@ const clientExtrasColumns = (): ColumnDef[] => [
   { id: uid(), key: 'value', label: 'Valor', type: 'currency', width: 140, locked: true },
 ];
 
+const profitColumns = (): ColumnDef[] => [
+  { id: uid(), key: 'name', label: 'Descrição', type: 'text', width: 280, locked: true },
+  { id: uid(), key: 'date', label: 'Data', type: 'date', width: 140, locked: true },
+  { id: uid(), key: 'value', label: 'Valor', type: 'currency', width: 140, locked: true },
+];
+
+/** Tabela de Lucro em branco (lançamentos manuais de lucro/receita). */
+export function emptyProfitSheet(): DataSheet {
+  return {
+    id: uid(),
+    name: 'Lucro',
+    description: 'Lançamentos de lucro e receitas do projeto',
+    columns: profitColumns(),
+    rows: [],
+  };
+}
+
 function makeRow(values: Record<string, string | number | null>): Row {
   const now = new Date().toISOString();
   return { id: uid(), values, createdAt: now, updatedAt: now };
@@ -141,11 +158,26 @@ export function buildStateFromImport(ip: ImportedProject): ProjectState {
     labor,
     extraLabor,
     clientExtras,
+    profit: emptyProfitSheet(),
     measurements: measurements(ip.measurements),
     budgetBreakdown: budgetCats(ip.budgetBreakdown),
     ceramics: ceramics(ip.ceramics),
     meta: { lastUpdated: new Date().toISOString() },
   };
+}
+
+/**
+ * Garante que estados carregados do Firestore (salvos antes de um campo novo
+ * do schema existir) tenham todas as tabelas do modelo atual. Preenche a
+ * tabela de Lucro quando ausente, sem tocar no restante do estado.
+ */
+export function normalizeState(state: ProjectState): ProjectState {
+  const validProfit =
+    !!state.profit &&
+    Array.isArray(state.profit.columns) &&
+    Array.isArray(state.profit.rows);
+  if (validProfit) return state;
+  return { ...state, profit: emptyProfitSheet() };
 }
 
 /** Projeto novo: tudo zerado, inclusive orçamento e Ajustes. */

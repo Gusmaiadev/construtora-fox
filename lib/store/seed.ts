@@ -249,6 +249,18 @@ export function buildInitialState(): ProjectState {
     ),
   };
 
+  const profit: DataSheet = {
+    id: uid(),
+    name: 'Lucro',
+    description: 'Lançamentos de lucro e receitas do projeto',
+    columns: [
+      { id: uid(), key: 'name', label: 'Descrição', type: 'text', width: 280, locked: true },
+      { id: uid(), key: 'date', label: 'Data', type: 'date', width: 140, locked: true },
+      { id: uid(), key: 'value', label: 'Valor', type: 'currency', width: 140, locked: true },
+    ],
+    rows: [],
+  };
+
   return {
     schemaVersion: 1,
     project: PROJECT_INFO,
@@ -257,6 +269,7 @@ export function buildInitialState(): ProjectState {
     labor,
     extraLabor,
     clientExtras,
+    profit,
     measurements: MEASUREMENTS,
     budgetBreakdown: BUDGET_BREAKDOWN,
     ceramics: CERAMICS,

@@ -1,11 +1,16 @@
 'use client';
 
 import { useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import { HardHat, ShoppingCart, Layers, TrendingUp } from 'lucide-react';
 import { PageHeader } from '@/components/dashboard/layout/PageHeader';
 import { DataGrid } from '@/components/dashboard/datagrid/DataGrid';
 import { Card, CardBody, CardHeader } from '@/components/dashboard/ui/Card';
-import { TopMaterialsChart } from '@/components/dashboard/charts/TopMaterialsChart';
+
+const TopMaterialsChart = dynamic(
+  () => import('@/components/dashboard/charts/TopMaterialsChart').then((m) => m.TopMaterialsChart),
+  { ssr: false, loading: () => <div className="h-[260px] w-full animate-pulse rounded-xl bg-white/[0.03]" /> },
+);
 import { useProject } from '@/lib/store/ProjectContext';
 import { topMaterials, totalMaterials } from '@/lib/store/selectors';
 import { Badge } from '@/components/dashboard/ui/Badge';
