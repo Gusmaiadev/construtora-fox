@@ -1,8 +1,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '@/components/site/Reveal';
+import { Marquee } from '@/components/site/Marquee';
 
 export const metadata = { title: 'Projetos' };
+
+const OBRA_1 = Array.from({ length: 6 }, (_, i) => `/site/images/obra-1/img${i + 1}.jpg`);
+const OBRA_3 = Array.from({ length: 8 }, (_, i) => `/site/images/obra-3/img${i + 1}.jpg`);
 
 export default function ProjetosPage() {
   return (
@@ -25,7 +29,7 @@ export default function ProjetosPage() {
             <Reveal as="article" className="proj-card">
               <div className="proj-card-img">
                 <Image
-                  src="/site/images/mandacaru-5.png"
+                  src="/site/images/mandacaru-5.jpg"
                   alt="Recanto de Mandacaru"
                   width={1254}
                   height={1254}
@@ -65,6 +69,23 @@ export default function ProjetosPage() {
               </div>
             </Reveal>
           </div>
+        </div>
+      </section>
+
+      <section className="obras">
+        <div className="obras-head">
+          <Reveal className="eyebrow">Obras</Reveal>
+          <Reveal as="h2" delay={1} className="section-title">
+            Registros das nossas <em>obras</em>
+          </Reveal>
+        </div>
+
+        <div className="obras-row">
+          <Marquee images={OBRA_1} alt="Obra 1" duration={45} />
+        </div>
+
+        <div className="obras-row">
+          <Marquee images={OBRA_3} alt="Obra 3" duration={55} reverse />
         </div>
       </section>
     </main>

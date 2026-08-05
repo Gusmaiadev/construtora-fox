@@ -77,8 +77,6 @@ export interface ProjectState {
   labor: DataSheet;
   extraLabor: DataSheet;
   clientExtras: DataSheet;
-  /** Lançamentos de lucro/receita do projeto (tabela editável). */
-  profit: DataSheet;
   measurements: Measurement[];
   budgetBreakdown: BudgetCategory[];
   ceramics: CeramicSpec[];

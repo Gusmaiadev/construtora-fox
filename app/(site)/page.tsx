@@ -79,7 +79,7 @@ export default function HomePage() {
         <div className="feature-inner">
           <Reveal className="feature-img">
             <Image
-              src="/site/images/mandacaru-5.png"
+              src="/site/images/mandacaru-5.jpg"
               alt="Recanto de Mandacaru"
               width={1254}
               height={1254}

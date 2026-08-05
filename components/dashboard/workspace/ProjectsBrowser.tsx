@@ -27,7 +27,6 @@ import { cn } from '@/lib/cn';
 import type { Folder, ProjectSummary } from '@/types/workspace';
 import { useAuth } from '@/lib/auth/AuthContext';
 import {
-  seedIfEmpty,
   listFolders,
   listProjects,
   createFolder,
@@ -70,22 +69,11 @@ export function ProjectsBrowser() {
     (async () => {
       try {
         setLoading(true);
-        // Busca pastas + projetos direto (uma ida em paralelo). O seed só é
-        // necessário na PRIMEIRISSIMA vez (banco vazio) — evita a leitura da
-        // coleção inteira que o seedIfEmpty fazia a cada visita do super admin.
-        let [f, p] = await Promise.all([
+        // Busca pastas + projetos numa ida só, em paralelo.
+        const [f, p] = await Promise.all([
           listFolders(),
           listProjects({ uid: admin.uid, isSuper }),
         ]);
-        if (isSuper && p.length === 0) {
-          const seeded = await seedIfEmpty();
-          if (seeded) {
-            [f, p] = await Promise.all([
-              listFolders(),
-              listProjects({ uid: admin.uid, isSuper }),
-            ]);
-          }
-        }
         if (!active) return;
         setFolders(f);
         setProjects(p);

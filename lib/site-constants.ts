@@ -14,4 +14,3 @@ export const NEIGHBORHOOD = 'Centro';
 export const CITY = 'Crateús';
 export const STATE = 'Ceará';
 export const COMPANY = 'Construtora Fox';
-export const COMPANY_TAGLINE = 'Investimentos bem construídos';

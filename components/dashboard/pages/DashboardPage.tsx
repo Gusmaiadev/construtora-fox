@@ -24,7 +24,7 @@ import {
   totalLabor,
   totalMaterials,
   totalMeasurements,
-  totalProfit,
+  projectProfit,
 } from '@/lib/store/selectors';
 import { KpiCard } from '@/components/dashboard/ui/KpiCard';
 import { Card, CardBody, CardHeader } from '@/components/dashboard/ui/Card';
@@ -67,7 +67,7 @@ export function DashboardPage() {
   const topMats = useMemo(() => topMaterials(state, 8), [state]);
   const measurementsTotal = totalMeasurements(state);
   const budgetPlanned = totalBudgetPlanned(state);
-  const profit = totalProfit(state);
+  const profit = useMemo(() => projectProfit(state), [state]);
 
   const burnRate = monthly.length > 0 ? monthly[monthly.length - 1]!.total : 0;
 
@@ -104,11 +104,11 @@ export function DashboardPage() {
           delay={0.05}
         />
         <KpiCard
-          label="Saldo do orçamento"
-          value={formatCurrency(progress.remaining)}
+          label="Margem de lucro"
+          value={formatPercent(profit.margin)}
           icon={PiggyBank}
-          accent={progress.remaining >= 0 ? 'emerald' : 'rose'}
-          hint={progress.remaining >= 0 ? 'Dentro do limite' : 'Acima do orçado'}
+          accent={profit.profit >= 0 ? 'emerald' : 'rose'}
+          hint={profit.profit >= 0 ? 'Dentro do limite' : 'Acima do orçado'}
           delay={0.1}
         />
         <KpiCard
@@ -148,10 +148,10 @@ export function DashboardPage() {
         />
         <KpiCard
           label="Lucro"
-          value={formatCurrency(profit)}
+          value={formatCurrency(profit.profit)}
           icon={TrendingUp}
-          accent={profit >= 0 ? 'emerald' : 'rose'}
-          hint={`${state.profit.rows.length} lançamentos`}
+          accent={profit.profit >= 0 ? 'emerald' : 'rose'}
+          hint={`Margem de ${formatPercent(profit.margin)}`}
           delay={0.15}
         />
       </div>

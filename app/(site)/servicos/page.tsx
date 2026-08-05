@@ -11,14 +11,14 @@ export const metadata = {
 };
 
 const SERV_PRINCIPAIS = [
-  { num: '01', title: 'Construção de Casas', desc: 'Projetos residenciais executados com alto padrão de acabamento, planejamento eficiente e atenção aos detalhes construtivos.', img: '/site/images/servicos-01-casas.jpg' },
-  { num: '02', title: 'Reformas Residenciais', desc: 'Modernização de ambientes com soluções inteligentes, acabamento refinado e execução organizada.', img: '/site/images/servicos-04-reformas-residenciais.jpg' },
+  { num: '01', title: 'Construção de Casas', desc: 'Projetos residenciais executados com alto padrão de acabamento, planejamento eficiente e atenção aos detalhes construtivos.', img: '/site/images/servicos-construcao-casas.jpg' },
+  { num: '02', title: 'Reformas Residenciais', desc: 'Modernização de ambientes com soluções inteligentes, acabamento refinado e execução organizada.', img: '/site/images/servicos-reformas-residenciais.jpg' },
   { num: '03', title: 'Reformas Comerciais', desc: 'Reformas planejadas para melhorar a experiência do cliente e valorizar espaços comerciais.', img: '/site/images/servicos-05-reformas-comerciais.jpg' },
-  { num: '04', title: 'Ampliações de Imóveis', desc: 'Projetos de expansão executados com integração estrutural e harmonia arquitetônica.', img: '/site/images/servicos-06-ampliacoes.jpg' },
+  { num: '04', title: 'Ampliações de Imóveis', desc: 'Projetos de expansão executados com integração estrutural e harmonia arquitetônica.', img: '/site/images/servicos-ampliacoes-imoveis.jpg' },
   { num: '05', title: 'Obras Industriais', desc: 'Execução de estruturas industriais com foco em desempenho, logística e durabilidade.', img: '/site/images/servicos-08-industriais.jpg' },
   { num: '06', title: 'Gerenciamento de Obras', desc: 'Controle técnico e operacional para garantir eficiência, cronograma e qualidade na execução.', img: '/site/images/servicos-09-gerenciamento.jpg' },
   { num: '07', title: 'Administração de Obras', desc: 'Gestão completa de fornecedores, equipes, materiais e processos construtivos.', img: '/site/images/servicos-10-administracao.jpg' },
-  { num: '08', title: 'Construção Personalizada', desc: 'Projetos sob medida que traduzem o estilo e as necessidades específicas de cada cliente.', img: '/site/images/servicos-11-personalizadas.jpg' },
+  { num: '08', title: 'Construção Personalizada', desc: 'Projetos sob medida que traduzem o estilo e as necessidades específicas de cada cliente.', img: '/site/images/obra-1/img3.jpg' },
   { num: '09', title: 'Lojas e Pontos Comerciais', desc: 'Construção de espaços comerciais que valorizam identidade visual e experiência do cliente.', img: '/site/images/servicos-12-comerciais-pontos.jpg' },
 ];
 

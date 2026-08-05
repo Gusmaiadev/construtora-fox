@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '@/components/site/Reveal';
-import { ParallaxImage } from '@/components/site/ParallaxImage';
+import { SiteVideo } from '@/components/site/SiteVideo';
 import { GalleryTrack } from '@/components/site/GalleryTrack';
 import { WHATSAPP_URL_RECANTO } from '@/lib/site-constants';
 
@@ -16,7 +16,12 @@ export default function RecantoPage() {
     <main>
       <section className="recanto-hero">
         <div className="recanto-hero-bg">
-          <ParallaxImage src="/site/images/recanto-hero.jpg" alt="" factor={0.45} priority />
+          <SiteVideo
+            src="/site/videos/recanto-hero.mp4"
+            poster="/site/videos/recanto-hero-poster.jpg"
+            factor={0.45}
+            preload="auto"
+          />
         </div>
         <div className="recanto-hero-inner">
           <Reveal className="recanto-tag">Empreendimento — Recanto de Mandacaru</Reveal>
@@ -60,12 +65,10 @@ export default function RecantoPage() {
       <section className="site-section">
         <div className="wrap recanto-about">
           <Reveal className="recanto-about-img">
-            <Image
-              src="/site/images/recanto-about.jpg"
-              alt=""
-              width={900}
-              height={1100}
-              sizes="(max-width: 1024px) 100vw, 45vw"
+            <SiteVideo
+              src="/site/videos/recanto-about.mp4"
+              poster="/site/videos/recanto-about-poster.jpg"
+              label="Recanto de Mandacaru — vista do loteamento"
             />
           </Reveal>
           <Reveal delay={1}>

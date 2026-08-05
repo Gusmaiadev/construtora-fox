@@ -16,9 +16,5 @@ dist-ssr
 coverage
 *.tsbuildinfo
 next-env.d.ts
-analyze.py
-analyze2.py
-extract_seed.py
-spreadsheet_data.json
 
 .vercel

@@ -31,18 +31,10 @@ import type {
   Row,
 } from '@/types/domain';
 import type { DuplicateOptions, Folder, Project, ProjectSummary } from '@/types/workspace';
-import {
-  buildEmptyState,
-  buildStateFromImport,
-  emptyProfitSheet,
-  normalizeState,
-  type ImportedProject,
-} from '@/lib/store/buildState';
-import importedRaw from '@/lib/data/imported-projects.json';
+import { buildEmptyState } from '@/lib/store/buildState';
 
 const FOLDERS = 'folders';
 const PROJECTS = 'projects';
-const DEFAULT_FOLDER_NAME = 'Projetos';
 
 function now(): string {
   return new Date().toISOString();
@@ -121,7 +113,7 @@ export async function getProject(id: string): Promise<Project | null> {
     folderId: data.folderId ?? null,
     createdAt: data.createdAt,
     updatedAt: data.updatedAt,
-    state: normalizeState(data.state),
+    state: data.state,
   };
 }
 
@@ -185,34 +177,6 @@ export async function duplicateProject(source: Project, opts: DuplicateOptions):
 }
 
 /* ------------------------------------------------------------------ */
-/* Seed — importa as planilhas .ods na primeira vez                    */
-/* ------------------------------------------------------------------ */
-
-const imported = importedRaw as unknown as ImportedProject[];
-
-export async function seedIfEmpty(): Promise<boolean> {
-  const existing = await getDocs(collection(db, PROJECTS));
-  if (!existing.empty) return false;
-
-  const folder = await createFolder(DEFAULT_FOLDER_NAME);
-  const batch = writeBatch(db);
-  for (const ip of imported) {
-    const ref = doc(collection(db, PROJECTS));
-    const ts = now();
-    const project: Omit<Project, 'id'> = {
-      name: ip.name,
-      folderId: folder.id,
-      createdAt: ts,
-      updatedAt: ts,
-      state: buildStateFromImport(ip),
-    };
-    batch.set(ref, project);
-  }
-  await batch.commit();
-  return true;
-}
-
-/* ------------------------------------------------------------------ */
 /* Helpers                                                             */
 /* ------------------------------------------------------------------ */
 
@@ -260,7 +224,6 @@ function cloneState(s: ProjectState, withData: boolean): ProjectState {
     labor: cloneSheet(s.labor, withData),
     extraLabor: cloneSheet(s.extraLabor, withData),
     clientExtras: cloneSheet(s.clientExtras, withData),
-    profit: cloneSheet(s.profit ?? emptyProfitSheet(), withData),
     measurements: withData
       ? s.measurements.map((m) => ({ ...m, id: uid() }) as Measurement)
       : [],

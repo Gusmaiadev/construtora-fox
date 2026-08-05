@@ -37,9 +37,6 @@ export function totalExtraLabor(s: ProjectState): number {
 export function totalClientExtras(s: ProjectState): number {
   return sumValueColumn(s.clientExtras);
 }
-export function totalProfit(s: ProjectState): number {
-  return sumValueColumn(s.profit);
-}
 export function totalMeasurements(s: ProjectState): number {
   return s.measurements.reduce((acc, m) => acc + (m.value || 0), 0);
 }
@@ -242,9 +239,19 @@ export function projectProgress(s: ProjectState): {
   };
 }
 
-export function ceramicTotalArea(s: ProjectState): number {
-  return s.ceramics.reduce((acc, c) => {
-    const m = parseFloat(String(c.size).replace(/[^\d,.]/g, '').replace(',', '.'));
-    return Number.isNaN(m) ? acc : acc + m;
-  }, 0);
+/**
+ * Lucro do projeto = o que sobra do orçamento total depois de descontar o
+ * realizado (documentação + materiais + mão de obra + M.O. extra + terreno).
+ */
+export function projectProfit(s: ProjectState): {
+  budget: number;
+  spent: number;
+  profit: number;
+  margin: number;
+} {
+  const budget = s.project.budget;
+  const spent = totalSpent(s);
+  const profit = budget - spent;
+  return { budget, spent, profit, margin: budget > 0 ? (profit / budget) * 100 : 0 };
 }
+
