@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter, Fraunces, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import './globals.css';
+import { JsonLd, SITE_URL, organizationSchema, websiteSchema } from '@/components/site/JsonLd';
+import { COMPANY } from '@/lib/site-constants';
 
 const inter = Inter({
   subsets: ['latin', 'latin-ext'],
@@ -33,19 +35,48 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Construtora Fox — Investimentos bem construídos',
+    default: 'Construtora no Ceará | Construtora Fox — Crateús e todo o estado',
     template: '%s · Construtora Fox',
   },
   description:
-    'Construtora Fox: desenvolvimento de empreendimentos planejados no Ceará — loteamentos, condomínios, residenciais e comerciais com alto potencial de valorização.',
-  metadataBase: new URL('https://construtorafox.com.br'),
+    'Construtora no Ceará com sede em Crateús: construção de casas, reformas residenciais e comerciais, ampliações, obras industriais e gerenciamento de obras. Orçamento por etapa e acompanhamento técnico.',
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: '/' },
   icons: { icon: '/fox.svg' },
+  applicationName: COMPANY,
+  authors: [{ name: COMPANY, url: SITE_URL }],
+  creator: COMPANY,
+  publisher: COMPANY,
+  category: 'Construção civil',
+  formatDetection: { telephone: true, address: true, email: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
+  },
   openGraph: {
-    title: 'Construtora Fox — Investimentos bem construídos',
+    siteName: COMPANY,
+    title: 'Construtora no Ceará — Construtora Fox',
     description:
-      'Empreendimentos planejados, valorização real e qualidade que atravessa o tempo.',
+      'Construção de casas, reformas, ampliações e obras comerciais em todo o Ceará. Orçamento por etapa e obra acompanhada de perto.',
+    url: SITE_URL,
     type: 'website',
     locale: 'pt_BR',
+    images: [
+      {
+        url: '/site/images/home-hero.jpg',
+        width: 1800,
+        height: 1200,
+        alt: 'Obra da Construtora Fox no Ceará',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Construtora no Ceará — Construtora Fox',
+    description:
+      'Construção de casas, reformas, ampliações e obras comerciais em todo o Ceará.',
+    images: ['/site/images/home-hero.jpg'],
   },
 };
 
@@ -55,7 +86,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="pt-BR"
       className={`${inter.variable} ${fraunces.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable}`}
     >
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        <JsonLd data={organizationSchema()} />
+        <JsonLd data={websiteSchema()} />
+        {children}
+      </body>
     </html>
   );
 }

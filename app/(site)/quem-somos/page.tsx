@@ -1,7 +1,12 @@
 import Image from 'next/image';
 import { Reveal } from '@/components/site/Reveal';
 
-export const metadata = { title: 'Quem Somos' };
+export const metadata = {
+  title: 'Quem somos — Construtora em Crateús, Ceará',
+  description:
+    'A Construtora Fox atua em construção, engenharia e desenvolvimento imobiliário no Ceará, com sede em Crateús e obras conduzidas por etapas medidas.',
+  alternates: { canonical: '/quem-somos' },
+};
 
 export default function QuemSomosPage() {
   return (

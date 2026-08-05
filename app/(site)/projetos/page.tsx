@@ -3,7 +3,12 @@ import Link from 'next/link';
 import { Reveal } from '@/components/site/Reveal';
 import { Marquee } from '@/components/site/Marquee';
 
-export const metadata = { title: 'Projetos' };
+export const metadata = {
+  title: 'Projetos e obras no Ceará',
+  description:
+    'Portfólio da Construtora Fox: o loteamento Recanto de Mandacaru, em Crateús, e registros de obras residenciais entregues no Ceará.',
+  alternates: { canonical: '/projetos' },
+};
 
 const OBRA_1 = Array.from({ length: 6 }, (_, i) => `/site/images/obra-1/img${i + 1}.jpg`);
 const OBRA_3 = Array.from({ length: 8 }, (_, i) => `/site/images/obra-3/img${i + 1}.jpg`);

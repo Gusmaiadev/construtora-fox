@@ -10,7 +10,12 @@ import {
   WHATSAPP_URL_RECANTO,
 } from '@/lib/site-constants';
 
-export const metadata = { title: 'Contato' };
+export const metadata = {
+  title: 'Contato — orçamento de obra no Ceará',
+  description:
+    'Fale com a Construtora Fox em Crateús, Ceará. Solicite orçamento para construção de casas, reformas, ampliações e obras comerciais em todo o estado.',
+  alternates: { canonical: '/contato' },
+};
 
 export default function ContatoPage() {
   return (

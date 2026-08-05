@@ -71,6 +71,9 @@ export function SiteFooter() {
             <li>
               <Link href="/contato">Contato</Link>
             </li>
+            <li>
+              <Link href="/cobertura">Onde atendemos</Link>
+            </li>
           </ul>
         </div>
         <div>

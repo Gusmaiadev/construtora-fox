@@ -6,9 +6,10 @@ import { GalleryTrack } from '@/components/site/GalleryTrack';
 import { WHATSAPP_URL_RECANTO } from '@/lib/site-constants';
 
 export const metadata = {
-  title: 'Recanto de Mandacaru',
+  title: 'Recanto de Mandacaru — loteamento em Crateús, Ceará',
   description:
-    'Loteamento planejado às margens da CE-189, em Crateús, Ceará — investimento com potencial real de valorização.',
+    'Loteamento planejado às margens da CE-189, em Crateús, Ceará: 154 lotes com infraestrutura, acesso facilitado e potencial real de valorização.',
+  alternates: { canonical: '/projetos/recanto-de-mandacaru' },
 };
 
 export default function RecantoPage() {

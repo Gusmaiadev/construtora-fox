@@ -5,9 +5,10 @@ import { ParallaxImage } from '@/components/site/ParallaxImage';
 import { WHATSAPP_URL } from '@/lib/site-constants';
 
 export const metadata = {
-  title: 'Serviços',
+  title: 'Serviços de construção e reforma no Ceará',
   description:
-    'Soluções completas em construção, engenharia e desenvolvimento imobiliário. 40+ frentes de atuação com qualidade técnica integral.',
+    'Construção de casas, reformas residenciais e comerciais, ampliações, obras industriais, galpões e gerenciamento de obras no Ceará. Veja as frentes de atuação da Construtora Fox.',
+  alternates: { canonical: '/servicos' },
 };
 
 const SERV_PRINCIPAIS = [

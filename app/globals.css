@@ -272,6 +272,24 @@ h2.section-title em { font-style: italic; color: var(--gold); font-weight: 400; 
 .marquee-item:hover img { transform: scale(1.05); }
 @keyframes marquee-scroll { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
 
+/* LANDINGS DE SEO LOCAL */
+.lp-hero { background: linear-gradient(180deg, rgba(15,23,42,.92), rgba(15,23,42,.82)), url("/site/images/servicos-hero.jpg") center/cover; color: #fff; padding: 200px 48px 100px; }
+.lp-hero h1 { font-family: var(--serif); font-weight: 300; font-size: clamp(38px,5vw,72px); line-height: 1.04; letter-spacing: -.024em; max-width: 20ch; margin-bottom: 20px; }
+.lp-hero h1 em { font-style: italic; color: var(--gold); font-weight: 400; }
+.lp-hero .sub { font-size: 18px; max-width: 62ch; opacity: .85; font-weight: 300; margin-bottom: 40px; }
+.lp-crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; opacity: .6; margin-bottom: 28px; }
+.lp-crumb a:hover { color: var(--gold); }
+.lp-body { max-width: 78ch; }
+.lp-body .lead + .lead { margin-top: 22px; }
+.lp-faq { margin-top: 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px 64px; }
+.lp-faq-item h3 { font-family: var(--serif); font-weight: 400; font-size: 21px; color: var(--ink); margin-bottom: 12px; line-height: 1.25; }
+.lp-faq-item p { opacity: .72; line-height: 1.65; }
+.lp-links { display: flex; flex-wrap: wrap; gap: 10px; }
+.lp-links a { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; padding: 10px 16px; border: 1px solid var(--line); border-radius: 999px; transition: all .3s ease; }
+.lp-links a:hover { border-color: var(--gold); color: var(--gold); }
+/* As landings têm 6 itens: 3 colunas fecham duas linhas cheias. */
+.lp-grid { grid-template-columns: repeat(3,1fr); }
+
 /* QUEM SOMOS */
 .about-hero { min-height: 80vh; background: linear-gradient(180deg, rgba(15,23,42,.4), rgba(15,23,42,.7)), url("/site/images/quemsomos-hero.jpg") center/cover; color: #fff; display: flex; align-items: center; padding: 200px 48px 100px; }
 .about-hero-inner { max-width: 1440px; margin: 0 auto; width: 100%; }
@@ -458,6 +476,8 @@ h2.section-title em { font-style: italic; color: var(--gold); font-weight: 400; 
   .recanto-meta-bar { padding: 16px 24px; flex-wrap: wrap; gap: 14px; font-size: 10px; }
   .recanto-meta-bar div b { font-size: 14px; }
   .position, .recanto-about, .local, .contact, .about-text { grid-template-columns: 1fr; gap: 60px; }
+  .lp-hero { padding: 150px 24px 70px; }
+  .lp-faq { grid-template-columns: 1fr; gap: 32px; margin-top: 40px; }
   .feature-inner { grid-template-columns: 1fr; }
   .feature-text { padding: 64px 24px; }
   .feature-img { aspect-ratio: 16/10; }
