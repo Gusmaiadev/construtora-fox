@@ -294,6 +294,43 @@ h2.section-title em { font-style: italic; color: var(--gold); font-weight: 400; 
 /* As landings têm 6 itens: 3 colunas fecham duas linhas cheias. */
 .lp-grid { grid-template-columns: repeat(3,1fr); }
 
+/* 404 — o número cotado como peça de desenho técnico */
+.nf { position: relative; background: var(--ink); color: #fff; min-height: 78vh; display: flex; align-items: center; padding: 200px 48px 120px; overflow: hidden; }
+.nf-grid { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; animation: nf-grid 1s ease forwards;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 78%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 78%); }
+.nf-inner { position: relative; z-index: 1; max-width: 1440px; margin: 0 auto; width: 100%; }
+.nf-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--gold); margin-bottom: 32px; opacity: 0; animation: nf-rise .6s ease .1s forwards; }
+
+/* inline-block para a prancha encolher até a largura do número: a cota
+   precisa medir exatamente o "404", senão a metáfora não fecha. */
+.nf-plate { display: inline-block; max-width: 82vw; margin-bottom: 48px; }
+.nf-num { display: block; font-family: var(--serif); font-weight: 300; font-size: clamp(96px, 15vw, 190px); line-height: .85; letter-spacing: -.04em; opacity: 0; animation: nf-rise .8s cubic-bezier(.2,.8,.2,1) .2s forwards; }
+.nf-dimwrap { display: block; position: relative; height: 34px; margin-top: 18px; }
+.nf-dim { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.nf-dim path { fill: none; stroke: var(--sky); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.nf-ext { stroke-dasharray: 26; stroke-dashoffset: 26; animation: nf-draw .45s ease .75s forwards; }
+.nf-ext-2 { animation-delay: .85s; }
+.nf-line { stroke-dasharray: 388; stroke-dashoffset: 388; animation: nf-draw .7s cubic-bezier(.4,0,.2,1) .95s forwards; }
+/* Precisa vencer `.nf-dim path { fill: none }`, que tem especificidade maior
+   que uma classe sozinha — as setas sairiam vazadas. */
+.nf-dim .nf-tick { fill: var(--sky); stroke: none; opacity: 0; animation: nf-fade .3s ease 1.5s forwards; }
+.nf-dim .nf-tick-2 { animation-delay: 1.55s; }
+.nf-label { display: block; margin-top: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--sky); opacity: 0; animation: nf-fade .5s ease 1.6s forwards; }
+
+.nf-title { font-family: var(--serif); font-weight: 300; font-size: clamp(34px, 4.6vw, 62px); line-height: 1.05; letter-spacing: -.024em; max-width: 18ch; margin-bottom: 20px; opacity: 0; animation: nf-rise .7s ease 1s forwards; }
+.nf-title em { font-style: italic; color: var(--gold); font-weight: 400; }
+.nf-text { font-size: 17px; font-weight: 300; color: rgba(255,255,255,.75); opacity: 0; max-width: 52ch; margin-bottom: 40px; animation: nf-rise .7s ease 1.15s forwards; }
+.nf-links { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; opacity: 0; animation: nf-rise .7s ease 1.3s forwards; }
+.nf-links a { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; padding: 10px 18px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; transition: all .3s ease; }
+.nf-links a:hover { border-color: var(--gold); color: var(--gold); }
+.nf-cta { opacity: 0; animation: nf-rise .7s ease 1.45s forwards; }
+
+@keyframes nf-grid { to { opacity: .16; } }
+@keyframes nf-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes nf-draw { to { stroke-dashoffset: 0; } }
+@keyframes nf-fade { to { opacity: 1; } }
+
 /* QUEM SOMOS */
 .about-hero { min-height: 80vh; background: linear-gradient(180deg, rgba(15,23,42,.4), rgba(15,23,42,.7)), url("/site/images/quemsomos-hero.jpg") center/cover; color: #fff; display: flex; align-items: center; padding: 200px 48px 100px; }
 .about-hero-inner { max-width: 1440px; margin: 0 auto; width: 100%; }
@@ -488,6 +525,8 @@ h2.section-title em { font-style: italic; color: var(--gold); font-weight: 400; 
   .position, .recanto-about, .local, .contact, .about-text { grid-template-columns: 1fr; gap: 60px; }
   .lp-hero { padding: 150px 24px 70px; }
   .lp-faq { grid-template-columns: 1fr; gap: 32px; margin-top: 40px; }
+  .nf { padding: 140px 24px 80px; min-height: 70vh; }
+  .nf-plate { margin-bottom: 36px; }
   .feature-inner { grid-template-columns: 1fr; }
   .feature-text { padding: 64px 24px; }
   .feature-img { aspect-ratio: 16/10; }
