@@ -11,6 +11,7 @@ const CORE: { path: string; priority: number; freq: MetadataRoute.Sitemap[number
   { path: '/quem-somos', priority: 0.7, freq: 'yearly' },
   { path: '/contato', priority: 0.7, freq: 'yearly' },
   { path: '/cobertura', priority: 0.6, freq: 'monthly' },
+  { path: '/politica-de-cookies', priority: 0.2, freq: 'yearly' },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

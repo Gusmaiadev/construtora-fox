@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { CookiePrefsButton } from '@/components/site/CookiePrefsButton';
 import {
   COMPANY,
   INSTAGRAM_URL,
@@ -103,7 +104,10 @@ export function SiteFooter() {
       </div>
       <div className="foot-bottom">
         <span>© {new Date().getFullYear()} {COMPANY}</span>
-        <span>Made with intention</span>
+        <span className="foot-legal">
+          <Link href="/politica-de-cookies">Política de cookies</Link>
+          <CookiePrefsButton />
+        </span>
       </div>
     </footer>
   );
