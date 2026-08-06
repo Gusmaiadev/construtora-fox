@@ -40,7 +40,11 @@ body.site-body {
   font-feature-settings: "ss01", "cv11";
   overflow-x: hidden;
 }
-body.site-body button { font-family: inherit; cursor: pointer; border: 0; background: none; }
+/* Reset de botão. O `:where()` zera a especificidade do ancestral: sem ele o
+   seletor valia (0,1,2) e atropelava as classes .site-btn-*, deixando botão
+   com texto branco sobre fundo transparente. Agora vale (0,0,1) e qualquer
+   classe vence. */
+:where(body.site-body) button { font-family: inherit; cursor: pointer; border: 0; background: none; }
 
 /* Navegação */
 .nav {
