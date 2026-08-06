@@ -1,8 +1,18 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/components/site/JsonLd';
 
-/** O painel e a API não têm nada a indexar e expõem rotas internas. */
-const DISALLOW = ['/admin', '/admin/', '/api/'];
+/**
+ * `/admin` NÃO entra aqui de propósito.
+ *
+ * robots.txt é público: listar o painel apenas anuncia onde ele fica. E
+ * `Disallow` bloqueia rastreamento, não indexação — uma URL bloqueada ainda
+ * pode aparecer na busca se alguém linkar para ela, e o `noindex` nunca é
+ * lido justamente porque o robô foi proibido de entrar.
+ *
+ * O painel é mantido fora do índice pelo cabeçalho `X-Robots-Tag: noindex`
+ * definido em next.config.mjs, que não é público e é respeitado de verdade.
+ */
+const DISALLOW = ['/api/'];
 
 /**
  * Crawlers de IA declarados explicitamente.

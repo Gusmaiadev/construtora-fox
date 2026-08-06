@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Construtora Fox">
+  <!--
+    Favicon simplificado. A logo completa tem telhado, martelo, janela e duas
+    linhas de texto — a 16px tudo isso vira borrão. Aqui fica só o telhado,
+    que é o motivo central da marca e o único elemento que sobrevive nesse
+    tamanho. Cor do círculo amostrada da logo original (#1D2330).
+  -->
+  <circle cx="32" cy="32" r="32" fill="#1D2330"/>
+  <path d="M32 12 L59 39 L48.5 39 L32 22.5 L15.5 39 L5 39 Z" fill="#FFFFFF"/>
+  <path d="M19 42.5 h26 v11 h-26 Z" fill="#FFFFFF"/>
+</svg>

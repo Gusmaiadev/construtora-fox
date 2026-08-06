@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     'Construtora no Ceará com sede em Crateús: construção de casas, reformas residenciais e comerciais, ampliações, obras industriais e gerenciamento de obras. Orçamento por etapa e acompanhamento técnico.',
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: '/' },
-  icons: { icon: '/fox.svg' },
+  // O ícone vem de app/icon.png e app/apple-icon.png (convenção do Next).
   applicationName: COMPANY,
   authors: [{ name: COMPANY, url: SITE_URL }],
   creator: COMPANY,
