@@ -10,6 +10,10 @@ export const INSTAGRAM_URL = 'https://www.instagram.com/construtorafox__/';
 
 export const BUSINESS_HOURS = 'Seg — Sex · 8h às 17h';
 export const LOCATION = 'Rua Moreira da Rocha, 580 — Sala 101, Centro, Crateús — Ceará';
+/** Formato oficial de URL do Google Maps: funciona em desktop e abre o app no celular. */
+export const MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  'Rua Moreira da Rocha, 580, Centro, Crateús - CE',
+)}`;
 export const NEIGHBORHOOD = 'Centro';
 export const CITY = 'Crateús';
 export const STATE = 'Ceará';

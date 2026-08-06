@@ -10,6 +10,7 @@ import {
   NEIGHBORHOOD,
   CITY,
   STATE,
+  MAPS_URL,
 } from '@/lib/site-constants';
 
 export function SiteFooter() {
@@ -86,17 +87,24 @@ export function SiteFooter() {
             <li>
               <Link href="/projetos/recanto-de-mandacaru#galeria">Galeria</Link>
             </li>
-            <li>
-              <Link href="/projetos/recanto-de-mandacaru#localizacao">Localização</Link>
-            </li>
           </ul>
         </div>
         <div>
           <h4>Contato</h4>
           <ul>
-            <li>{WHATSAPP_PHONE}</li>
             <li>
-              {NEIGHBORHOOD} · {CITY} — {STATE}
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                {WHATSAPP_PHONE}
+              </a>
+            </li>
+            <li>
+              {/* O endereço é o destino natural de quem procura "localização". */}
+              <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="foot-endereco">
+                Rua Moreira da Rocha, 580 — Sala 101
+                <br />
+                {NEIGHBORHOOD} · {CITY} — {STATE}
+                <span className="foot-maps">Ver no Google Maps →</span>
+              </a>
             </li>
             <li>{BUSINESS_HOURS}</li>
           </ul>

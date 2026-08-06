@@ -3,7 +3,14 @@ import Link from 'next/link';
 import { Reveal } from '@/components/site/Reveal';
 import { SiteVideo } from '@/components/site/SiteVideo';
 import { GalleryTrack } from '@/components/site/GalleryTrack';
+import { LocationMap } from '@/components/site/LocationMap';
 import { WHATSAPP_URL_RECANTO } from '@/lib/site-constants';
+
+/**
+ * PROVISÓRIO — centro de Crateús, não o ponto exato do loteamento.
+ * Substituir pelas coordenadas reais do Recanto de Mandacaru na CE-189.
+ */
+const RECANTO_COORDS = { lat: -5.1783, lon: -40.6775 };
 
 export const metadata = {
   title: 'Recanto de Mandacaru — loteamento em Crateús, Ceará',
@@ -200,40 +207,13 @@ export default function RecantoPage() {
               </div>
             </div>
           </Reveal>
-          <Reveal className="map" delay={1}>
-            <svg viewBox="0 0 400 400" preserveAspectRatio="none" style={{ opacity: 0.25 }}>
-              <defs>
-                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#93BFE2" strokeWidth=".5" />
-                </pattern>
-              </defs>
-              <rect width="400" height="400" fill="url(#grid)" />
-              <path
-                d="M0 200 Q100 180 200 200 T400 220"
-                fill="none"
-                stroke="#C6A15B"
-                strokeWidth="1.5"
-                opacity=".6"
-              />
-              <path
-                d="M0 280 Q120 260 200 290 T400 270"
-                fill="none"
-                stroke="#93BFE2"
-                strokeWidth="1"
-                opacity=".4"
-              />
-              <path
-                d="M180 0 Q200 100 220 200 T240 400"
-                fill="none"
-                stroke="#93BFE2"
-                strokeWidth="1"
-                opacity=".4"
-              />
-            </svg>
-            <div className="map-pin">
-              <div className="map-pin-label">Recanto de Mandacaru</div>
-              <div className="map-pin-dot" />
-            </div>
+          <Reveal delay={1}>
+            <LocationMap
+              lat={RECANTO_COORDS.lat}
+              lon={RECANTO_COORDS.lon}
+              label="Recanto de Mandacaru · CE-189, Crateús"
+              query="CE-189, Crateús - CE"
+            />
           </Reveal>
         </div>
       </section>
